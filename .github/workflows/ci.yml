@@ -11,7 +11,6 @@ on:
     branches: [ "master" ]
   
 env:
-  DOTNET_VERSION: '8.0.x'                 # Version .NET
   DOTNET_INSTALL_DIR: '.\.dotnet'
 
   
@@ -30,18 +29,18 @@ jobs:
     
     steps:
         - uses: actions/checkout@v4.1.1
-        # - name: Cache .NET 📦
-        #   id: cache-dotnet
-        #   uses: actions/cache@v4.0.1
-        #   with:
-        #     path: ${{ env.DOTNET_INSTALL_DIR }}
-        #     key: Dotnet-8
-        #     restore-keys: Dotnet-8
+        - name: Cache .NET 📦
+          id: cache-dotnet
+          uses: actions/cache@v4.0.1
+          with:
+            path: ${{ env.DOTNET_INSTALL_DIR }}
+            key: Dotnet-8
+            restore-keys: Dotnet-8
         
-        # - name: Display Cache .NET 📦
-        #   run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
+        - name: Display Cache .NET 📦
+          run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
         - name: Setup .NET 📦
-          # if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
+          if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
           uses: actions/setup-dotnet@v4.0.0
           with:
             dotnet-version: ${{ env.DOTNET_VERSION }}
