@@ -30,16 +30,18 @@ jobs:
     
     - name: Build
       run: dotnet build -c release --no-restore
+
+    - name: Check
+      run: |
+          pwd
+          ls
+          ls -la
       
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.0
       with:
         # Artifact name
         name: GitHubActionsHelloWorldConsoleDownloadableArtifact #.zip will be added automatically
-        run: |
-          pwd
-          ls
-          ls -la
         path: bin\release\net8.0\publish\*.*
 # env:
 #   DOTNET_NOLOGO: true                     # Disable the .NET logo
