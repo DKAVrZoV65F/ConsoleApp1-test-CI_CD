@@ -61,8 +61,7 @@ jobs:
     - name: Install Dependencies 📂
       if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
       run: |
-        dotnet workload restore
-        dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
+        dotnet restore ConsoleApp1/ConsoleApp1.csproj
     - name: Set installed/cached dependencies path [${{ env.DOTNET_DEPENDENCIES_DIR }}] 💾
       run: echo "${{ env.DOTNET_DEPENDENCIES_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
         
@@ -108,8 +107,7 @@ jobs:
     - name: Install Dependencies 📂
       if: ${{ steps.cache-dependencies-server.outputs.cache-hit != 'true' }}
       run: |
-        dotnet workload restore
-        dotnet restore MLFoodAnalyzerServer/MLFoodAnalyzerServer.csproj
+        dotnet restore ConsoleApp1/ConsoleApp1.csproj
     - name: Set installed/cached dependencies path [${{ env.DOTNET_DEPENDENCIES_DIR }}] 💾
       run: echo "${{ env.DOTNET_DEPENDENCIES_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
         
