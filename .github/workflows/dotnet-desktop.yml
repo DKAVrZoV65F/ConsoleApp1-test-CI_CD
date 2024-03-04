@@ -49,8 +49,8 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
-    - name: Restore dependencies
-      run: dotnet restore
+    # - name: Restore dependencies
+    #   run: dotnet restore
     
     - name: Build 🧱
       run: dotnet build -c release --no-restore
@@ -82,8 +82,8 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
-    - name: Restore dependencies
-      run: dotnet restore
+    # - name: Restore dependencies
+    #   run: dotnet restore
     
     - name: Build 🧱
       run: dotnet build -c release --no-restore
