@@ -18,12 +18,12 @@ jobs:
 
     steps:
     - name: Checkout source code
-      uses: actions/checkout@v2
+      uses: actions/checkoutv@4.1.1
     
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4.0.0
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 8.0.x
     
     - name: Restore dependencies
       run: dotnet restore
@@ -32,11 +32,11 @@ jobs:
       run: dotnet build -c release --no-restore
       
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2.2.2
+      uses: actions/upload-artifact@v4.3.0
       with:
         # Artifact name
         name: GitHubActionsHelloWorldConsoleDownloadableArtifact #.zip will be added automatically
-        path: bin/release/net5.0/*.*
+        path: bin/release/net8.0/*.*
 # env:
 #   DOTNET_NOLOGO: true                     # Disable the .NET logo
 #   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
