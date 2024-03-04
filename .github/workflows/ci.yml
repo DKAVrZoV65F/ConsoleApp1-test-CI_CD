@@ -12,7 +12,7 @@ on:
   
 env:
   DOTNET_INSTALL_DIR: '.\.dotnet'
-  # DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
+  DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
 
   
 concurrency:
