@@ -49,20 +49,6 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Cache Dependencies 📂
-      id: cache-dependencies
-      uses: actions/cache@v4.0.1
-      with:
-        path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
-        key: ${{ runner.os }}-dotnet-dependencies
-        restore-keys: ${{ runner.os }}-dotnet-dependencies
-    - name: Install Dependencies 📂
-      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
-      run: |
-        dotnet restore ConsoleApp1/ConsoleApp1.csproj
-    - name: Set installed/cached dependencies path [${{ env.DOTNET_DEPENDENCIES_DIR }}] 💾
-      run: echo "${{ env.DOTNET_DEPENDENCIES_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
-        
     - name: Build 🧱
       run: dotnet build
 
@@ -92,20 +78,6 @@ jobs:
       uses: actions/setup-dotnet@v4.0.0
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-    - name: Set installed/cached dotnet path [${{ env.DOTNET_INSTALL_DIR }}] 💾
-      run: echo "${{ env.DOTNET_INSTALL_DIR }}" | Out-File -FilePath $ENV:GITHUB_PATH -Encoding utf8 -Append
-
-    - name: Cache Dependencies 📂
-      id: cache-dependencies-server
-      uses: actions/cache@v4.0.1
-      with:
-        path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
-        key: ${{ runner.os }}-dotnet-dependencies
-        restore-keys: ${{ runner.os }}-dotnet-dependencies
-    - name: Install Dependencies 📂
-      if: ${{ steps.cache-dependencies-server.outputs.cache-hit != 'true' }}
-      run: |
-        dotnet restore ConsoleApp1/ConsoleApp1.csproj
         
     - name: Build 🧱
       run: dotnet build -c release
