@@ -10,9 +10,12 @@ on:
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
-
+  
+concurrency:
+  group: CI/CD-Server-🧪🚀
+  cancel-in-progress: true
 jobs:
-  build:
+  CI:
     continue-on-error: false
     strategy:
       matrix:
@@ -28,8 +31,8 @@ jobs:
           uses: actions/cache@v4.0.1
           with:
             path: ${{ env.DOTNET_INSTALL_DIR }}
-            key: ${{ runner.os }}-dotnet-8
-            restore-keys: ${{ runner.os }}-dotnet-8
+            key: Dotnet-8
+            restore-keys: Dotnet-8
         
         - name: Display Cache .NET 📦
           run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
@@ -39,19 +42,75 @@ jobs:
           with:
             dotnet-version: ${{ env.DOTNET_VERSION }}
     
-        - name: Restore dependencies
+        - name: Cache Dependencies 📂
+          id: cache-dependencies
+          uses: actions/cache@v4.0.1
+          with:
+            path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
+            key: ${{ runner.os }}-dotnet-dependencies
+            restore-keys: ${{ runner.os }}-dotnet-dependencies
+        - name: Install Dependencies 📂
+          if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
           run: dotnet restore
         
         - name: Build 🧱
           run: dotnet build -c release --no-restore
     
-        - name: Upload a Build Artifact
+        - name: Upload a Build Artifact 🚀
           uses: actions/upload-artifact@v4.3.0
           with:
             # Artifact name
             name: Artifact-${{ matrix.os }}
             path: ./ConsoleApp1/bin/Release/net8.0/*
+            
+  CD:
+    needs: CI
+    continue-on-error: false
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+      fail-fast: false
+      max-parallel: 1
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4.1.1
+    - name: Cache .NET 📦
+      id: cache-dotnet
+      uses: actions/cache@v4.0.1
+      with:
+        path: ${{ env.DOTNET_INSTALL_DIR }}
+        key: ${{ runner.os }}-dotnet-8
+        restore-keys: ${{ runner.os }}-dotnet-8
+        
+    - name: Display Cache .NET 📦
+      run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
+    - name: Setup .NET 📦
+      if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
+
+
+    - name: Cache Dependencies 📂
+      id: cache-dependencies
+      uses: actions/cache@v4.0.1
+      with:
+        path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
+        key: ${{ runner.os }}-dotnet-dependencies
+        restore-keys: ${{ runner.os }}-dotnet-dependencies
+    - name: Install Dependencies 📂
+      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
+      run: dotnet restore
+        
+    - name: Build 🧱
+      run: dotnet build -c release --no-restore
+    
+    - name: Upload a Build Artifact 🚀
+      uses: actions/upload-artifact@v4.3.0
+      with:
+          name: Artifact-${{ matrix.os }}
+          path: ./ConsoleApp1/bin/Release/net8.0/*
 
 
 
@@ -69,10 +128,7 @@ jobs:
 #   DOTNET_INSTALL_DIR: '.\.dotnet'
 #   DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
 
-# concurrency:
-#   group: CI/CD-Server-🧪🚀
-#   cancel-in-progress: true
-# jobs:
+
 #   CI:
 #     continue-on-error: false
 #     strategy:
@@ -98,51 +154,4 @@ jobs:
 #       uses: actions/setup-dotnet@v4.0.0
 #       with:
 #         dotnet-version: ${{ env.DOTNET_VERSION }}
-        
-#     # - name: Restore dependencies
-#     #   run: dotnet restore
-    
-#     - name: Build 🧱
-#       run: dotnet build -c release
-
-#   CD:
-#     needs: CI
-#     continue-on-error: false
-#     strategy:
-#       matrix:
-#         os: [ ubuntu-latest, macos-latest ]
-#       fail-fast: false
-#       max-parallel: 1
-#     runs-on: ${{ matrix.os }}
-#     steps:
-#     - uses: actions/checkout@v4.1.1
-#     - name: Cache .NET 📦
-#       id: cache-dotnet
-#       uses: actions/cache@v4.0.1
-#       with:
-#         path: ${{ env.DOTNET_INSTALL_DIR }}
-#         key: ${{ runner.os }}-dotnet-8
-#         restore-keys: ${{ runner.os }}-dotnet-8
-        
-#     - name: Display Cache .NET 📦
-#       run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
-#     - name: Setup .NET 📦
-#       if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
-#       uses: actions/setup-dotnet@v4.0.0
-#       with:
-#         dotnet-version: ${{ env.DOTNET_VERSION }}
-        
-#     # - name: Restore dependencies
-#     #   run: dotnet restore
-    
-#     - name: Build 🧱
-#       run: dotnet build -c release
-        
-#     - name: Upload Artifact 🚀
-#       uses: actions/upload-artifact@v4.3.0
-#       with:
-#         name: Server-Build-${{ matrix.os }}
-#         path: bin/Release/net8.0/publish/*.*
-#         reporter: dotnet-trx
-#         fail-on-error: true        
 
