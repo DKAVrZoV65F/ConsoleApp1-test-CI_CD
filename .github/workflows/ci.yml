@@ -22,7 +22,7 @@ env:
 
   
 concurrency:
-  group: CI/CD-Server-🧪🚀
+  group: CI-Server-🧪
   cancel-in-progress: true
 jobs:
   CI:
