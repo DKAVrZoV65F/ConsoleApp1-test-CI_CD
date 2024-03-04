@@ -13,30 +13,54 @@ on:
 
 jobs:
   build:
-    name: Build the app
-    runs-on: ubuntu-latest
-
+    continue-on-error: false
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest, macos-latest ]
+      fail-fast: false
+      max-parallel: 1
+    runs-on: ${{ matrix.os }}
+    
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v4.1.1
+        - uses: actions/checkout@v4.1.1
+        - name: Cache .NET 📦
+          id: cache-dotnet
+          uses: actions/cache@v4.0.1
+          with:
+            path: ${{ env.DOTNET_INSTALL_DIR }}
+            key: ${{ runner.os }}-dotnet-8
+            restore-keys: ${{ runner.os }}-dotnet-8
+        
+        - name: Display Cache .NET 📦
+          run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
+        - name: Setup .NET 📦
+          if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
+          uses: actions/setup-dotnet@v4.0.0
+          with:
+            dotnet-version: ${{ env.DOTNET_VERSION }}
     
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4.0.0
-      with:
-        dotnet-version: 8.0.x
+        - name: Restore dependencies
+          run: dotnet restore
+        
+        - name: Build 🧱
+          run: dotnet build -c release --no-restore
     
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build -c release --no-restore
+        - name: Upload a Build Artifact
+          uses: actions/upload-artifact@v4.3.0
+          with:
+            # Artifact name
+            name: Artifact-${{ matrix.os }}
+            path: ./ConsoleApp1/bin/Release/net8.0/*
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.3.0
-      with:
-        # Artifact name
-        name: Artifact #.zip will be added automatically
-        path: ./ConsoleApp1/bin/Release/net8.0/*
+
+
+
+
+
+
+
+
+            
 # env:
 #   DOTNET_NOLOGO: true                     # Disable the .NET logo
 #   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
