@@ -1,4 +1,4 @@
-name: CI Server 🧪
+name: CI/CD Server 🧪🚀
 
 on:
   push:
@@ -22,7 +22,7 @@ env:
 
   
 concurrency:
-  group: CI-Server-🧪
+  group: CI/CD-Server-🧪🚀
   cancel-in-progress: true
 jobs:
   CI:
@@ -58,5 +58,21 @@ jobs:
         - name: Build 🧱
           run: dotnet build -c release --no-restore
 
-#         dotnet-version: ${{ env.DOTNET_VERSION }}
+        - name: Test 🧪
+          # run: dotnet test xU_Server --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
+          run: dotnet test --logger "trx;LogFileName=test-results-server-{{ matrix.os }}.trx" || true
 
+        - name: Publish Test Result 🧪
+          uses: dorny/test-reporter@v1
+          if: always()
+          with:
+            name: Report Tests 💾
+            path: "**/test-results-server-{{ matrix.os }}.trx"
+            reporter: dotnet-trx
+            fail-on-error: true
+
+        - name: Upload a Build Artifact 🚀
+          uses: actions/upload-artifact@v4.3.0
+          with:
+              name: Artifact-${{ matrix.os }}
+              path: ./ConsoleApp1/bin/Release/net8.0/*
