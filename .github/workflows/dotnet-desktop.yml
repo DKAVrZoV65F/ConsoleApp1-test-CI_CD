@@ -33,7 +33,7 @@ jobs:
 
     - name: Check
       run: |
-          cd ./ConsoleApp1/bin/Release/
+          cd ./ConsoleApp1/bin/Release/net8.0/
           pwd
           ls
           ls -la
@@ -43,7 +43,7 @@ jobs:
       with:
         # Artifact name
         name: GitHubActionsHelloWorldConsoleDownloadableArtifact #.zip will be added automatically
-        path: ./ConsoleApp1/bin/Release/net8.0/*.*
+        path: ./ConsoleApp1/bin/Release/net8.0/*
 # env:
 #   DOTNET_NOLOGO: true                     # Disable the .NET logo
 #   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
