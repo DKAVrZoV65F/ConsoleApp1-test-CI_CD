@@ -57,9 +57,12 @@ jobs:
         
         - name: Build 🧱
           run: dotnet build -c release --no-restore
-            
+
+  Check-CI:
+    runs-on: ubuntu-latest
+    
   CD:
-    needs: CI
+    needs: Check-CI
     continue-on-error: false
     strategy:
       matrix:
