@@ -29,7 +29,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build -c release --no-restore -r ubuntu.22.04-x64 --self-contained
+      run: dotnet build -c release --no-restore
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.0
