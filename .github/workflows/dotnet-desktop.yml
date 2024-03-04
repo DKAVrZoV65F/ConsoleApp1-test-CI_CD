@@ -53,7 +53,7 @@ jobs:
     #   run: dotnet restore
     
     - name: Build 🧱
-      run: dotnet build -c release --no-restore
+      run: dotnet build -c release
 
   CD:
     needs: CI
@@ -86,7 +86,7 @@ jobs:
     #   run: dotnet restore
     
     - name: Build 🧱
-      run: dotnet build -c release --no-restore
+      run: dotnet build -c release
         
     - name: Upload Artifact 🚀
       uses: actions/upload-artifact@v4.3.0
