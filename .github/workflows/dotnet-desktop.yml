@@ -60,7 +60,9 @@ jobs:
 
   Check-CI:
     runs-on: ubuntu-latest
-    
+    steps:
+        - uses: actions/checkout@v4.1.1
+        - name: TEST 📦
   CD:
     needs: Check-CI
     continue-on-error: false
