@@ -27,7 +27,7 @@ jobs:
     continue-on-error: false
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest ]
       fail-fast: false
       max-parallel: 1
     runs-on: ${{ matrix.os }}
@@ -48,16 +48,19 @@ jobs:
       uses: actions/setup-dotnet@v4.0.0
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
+        
+    - name: Restore dependencies
+      run: dotnet restore
+    
     - name: Build 🧱
-      run: dotnet build
+      run: dotnet build -c release --no-restore
 
   CD:
     needs: CI
     continue-on-error: false
     strategy:
       matrix:
-        os: [ windows-latest, ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest ]
       fail-fast: false
       max-parallel: 1
     runs-on: ${{ matrix.os }}
@@ -79,8 +82,11 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
         
+    - name: Restore dependencies
+      run: dotnet restore
+    
     - name: Build 🧱
-      run: dotnet build -c release
+      run: dotnet build -c release --no-restore
         
     - name: Upload Artifact 🚀
       uses: actions/upload-artifact@v4.3.0
