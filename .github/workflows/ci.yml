@@ -56,7 +56,7 @@ jobs:
             
         - name: Install Dependencies 📂
           # if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
-          run: dotnet restore ConsoleApp1
+          run: dotnet restore
         
         - name: Build 🧱
           run: dotnet build -c release --no-restore
