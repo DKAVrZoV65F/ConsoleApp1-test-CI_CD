@@ -1,4 +1,4 @@
-name: CI/CD Server 🧪🚀
+name: CI Server 🧪
 
 on:
   push:
@@ -57,53 +57,6 @@ jobs:
         
         - name: Build 🧱
           run: dotnet build -c release --no-restore
-
-  Check-CI:
-    runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v4.1.1
-        - name: TEST 📦
-          run: echo 'Test'
-
-        
-  CD:
-    needs: Check-CI
-    continue-on-error: false
-    strategy:
-      matrix:
-        os: [ windowws-latest, ubuntu-latest, macos-latest ]
-      fail-fast: false
-      max-parallel: 1
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v4.1.1
-    - name: Cache .NET 📦
-      id: cache-dotnet
-      uses: actions/cache@v4.0.1
-      with:
-        path: ${{ env.DOTNET_INSTALL_DIR }}
-        key: Dotnet-8
-        restore-keys: Dotnet-8
-        
-    - name: Display Cache .NET 📦
-      run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
-    - name: Setup .NET 📦
-      if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
-      uses: actions/setup-dotnet@v4.0.0
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Install Dependencies 📂
-      run: dotnet restore
-        
-    - name: Build 🧱
-      run: dotnet build -c release --no-restore
-    
-    - name: Upload a Build Artifact 🚀
-      uses: actions/upload-artifact@v4.3.0
-      with:
-          name: Artifact-${{ matrix.os }}
-          path: ./ConsoleApp1/bin/Release/net8.0/*
 
 #         dotnet-version: ${{ env.DOTNET_VERSION }}
 
