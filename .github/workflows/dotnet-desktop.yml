@@ -13,10 +13,10 @@ on:
 
   
 env:
-  # DOTNET_NOLOGO: true                     # Disable the .NET logo
-  # DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
-  # DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
-  # DOTNET_VERSION: '8.0.x'                 # Version .NET
+  DOTNET_NOLOGO: true                     # Disable the .NET logo
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
+  DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
+  DOTNET_VERSION: '8.0.x'                 # Version .NET
   DOTNET_INSTALL_DIR: '.\.dotnet'
   # DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
 
@@ -51,27 +51,12 @@ jobs:
           uses: actions/setup-dotnet@v4.0.0
           with:
             dotnet-version: ${{ env.DOTNET_VERSION }}
-    
-        # - name: Cache Dependencies 📂
-        #   id: cache-dependencies
-        #   uses: actions/cache@v4.0.1
-        #   with:
-        #     path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
-        #     key: ${{ runner.os }}-dotnet-dependencies
-        #     restore-keys: ${{ runner.os }}-dotnet-dependencies
+            
         - name: Install Dependencies 📂
-          # if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
           run: dotnet restore
         
         - name: Build 🧱
           run: dotnet build -c release --no-restore
-    
-        - name: Upload a Build Artifact 🚀
-          uses: actions/upload-artifact@v4.3.0
-          with:
-            # Artifact name
-            name: Artifact-${{ matrix.os }}
-            path: ./ConsoleApp1/bin/Release/net8.0/*
             
   CD:
     needs: CI
@@ -89,8 +74,8 @@ jobs:
       uses: actions/cache@v4.0.1
       with:
         path: ${{ env.DOTNET_INSTALL_DIR }}
-        key: ${{ runner.os }}-dotnet-8
-        restore-keys: ${{ runner.os }}-dotnet-8
+        key: Dotnet-8
+        restore-keys: Dotnet-8
         
     - name: Display Cache .NET 📦
       run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
@@ -100,15 +85,7 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    # - name: Cache Dependencies 📂
-    #   id: cache-dependencies
-    #   uses: actions/cache@v4.0.1
-    #   with:
-    #     path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
-    #     key: ${{ runner.os }}-dotnet-dependencies
-    #     restore-keys: ${{ runner.os }}-dotnet-dependencies
     - name: Install Dependencies 📂
-      # if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
       run: dotnet restore
         
     - name: Build 🧱
@@ -120,46 +97,5 @@ jobs:
           name: Artifact-${{ matrix.os }}
           path: ./ConsoleApp1/bin/Release/net8.0/*
 
-
-
-
-
-
-
-
-            
-# env:
-#   DOTNET_NOLOGO: true                     # Disable the .NET logo
-#   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
-#   DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
-#   DOTNET_VERSION: '8.0.x'                 # Version .NET
-#   DOTNET_INSTALL_DIR: '.\.dotnet'
-#   DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
-
-
-#   CI:
-#     continue-on-error: false
-#     strategy:
-#       matrix:
-#         os: [ ubuntu-latest, macos-latest ]
-#       fail-fast: false
-#       max-parallel: 1
-#     runs-on: ${{ matrix.os }}
-#     steps:
-#     - uses: actions/checkout@v4.1.1
-#     - name: Cache .NET 📦
-#       id: cache-dotnet
-#       uses: actions/cache@v4.0.1
-#       with:
-#         path: ${{ env.DOTNET_INSTALL_DIR }}
-#         key: ${{ runner.os }}-dotnet-8
-#         restore-keys: ${{ runner.os }}-dotnet-8
-        
-#     - name: Display Cache .NET 📦
-#       run: echo '${{ toJSON(steps.cache-dotnet.outputs) }}'
-#     - name: Setup .NET 📦
-#       if: ${{ steps.cache-dotnet.outputs.cache-hit != 'true' }}
-#       uses: actions/setup-dotnet@v4.0.0
-#       with:
 #         dotnet-version: ${{ env.DOTNET_VERSION }}
 
