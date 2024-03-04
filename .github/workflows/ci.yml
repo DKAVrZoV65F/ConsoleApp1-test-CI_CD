@@ -19,7 +19,7 @@ concurrency:
   group: CI/CD-Server-🧪🚀
   cancel-in-progress: true
 jobs:
-  CI:
+  CI-CD:
     continue-on-error: false
     strategy:
       matrix:
@@ -46,18 +46,17 @@ jobs:
           with:
             dotnet-version: ${{ env.DOTNET_VERSION }}
 
-
-        - name: Cache Dependencies 📂
-          id: cache-dependencies
-          uses: actions/cache@v4.0.1
-          with:
-            path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
-            key: Dotnet-dependencies
-            restore-keys: Dotnet-dependencies
+        # - name: Cache Dependencies 📂
+        #   id: cache-dependencies
+        #   uses: actions/cache@v4.0.1
+        #   with:
+        #     path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
+        #     key: Dotnet-dependencies
+        #     restore-keys: Dotnet-dependencies
             
         - name: Install Dependencies 📂
-          if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
-          run: dotnet restore
+          # if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
+          run: dotnet restore ConsoleApp1
         
         - name: Build 🧱
           run: dotnet build -c release --no-restore
