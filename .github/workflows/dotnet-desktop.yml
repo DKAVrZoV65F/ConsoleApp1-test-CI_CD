@@ -29,20 +29,13 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build -c release --no-restore
+      run: dotnet build -c release --no-restore -r ubuntu.22.04-x64 --self-contained
 
-    - name: Check
-      run: |
-          cd ./ConsoleApp1/bin/Release/net8.0/
-          pwd
-          ls
-          ls -la
-      
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.0
       with:
         # Artifact name
-        name: GitHubActionsHelloWorldConsoleDownloadableArtifact #.zip will be added automatically
+        name: Artifact #.zip will be added automatically
         path: ./ConsoleApp1/bin/Release/net8.0/*
 # env:
 #   DOTNET_NOLOGO: true                     # Disable the .NET logo
