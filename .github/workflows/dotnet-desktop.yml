@@ -33,6 +33,7 @@ jobs:
 
     - name: Check
       run: |
+          cd ./ConsoleApp1/
           pwd
           ls
           ls -la
