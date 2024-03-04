@@ -9,16 +9,10 @@ on:
       - '**/*.gitattributes'
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:
-
   
 env:
-  # DOTNET_NOLOGO: true                     # Disable the .NET logo
-  # DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Disable the .NET first time experience
-  # DOTNET_CLI_TELEMETRY_OPTOUT: true       # Disable sending .NET CLI telemetry
-  # DOTNET_VERSION: '8.0.x'                 # Version .NET
+  DOTNET_VERSION: '8.0.x'                 # Version .NET
   DOTNET_INSTALL_DIR: '.\.dotnet'
-  # DOTNET_DEPENDENCIES_DIR: '~/.nuget/packages'
 
   
 concurrency:
@@ -51,8 +45,18 @@ jobs:
           uses: actions/setup-dotnet@v4.0.0
           with:
             dotnet-version: ${{ env.DOTNET_VERSION }}
+
+
+        - name: Cache Dependencies 📂
+          id: cache-dependencies
+          uses: actions/cache@v4.0.1
+          with:
+            path: ${{ env.DOTNET_DEPENDENCIES_DIR }}
+            key: Dotnet-dependencies
+            restore-keys: Dotnet-dependencies
             
         - name: Install Dependencies 📂
+          if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
           run: dotnet restore
         
         - name: Build 🧱
