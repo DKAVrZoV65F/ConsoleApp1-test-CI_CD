@@ -33,7 +33,7 @@ jobs:
 
     - name: Check
       run: |
-          cd ./ConsoleApp1/
+          cd ./ConsoleApp1/bin/release/net8.0
           pwd
           ls
           ls -la
